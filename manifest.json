@@ -1,0 +1,40 @@
+{
+	"name": "Translate Now",
+	"description": "Right click a selection, page or link to translate words.",
+	"homepage_url": "https://github.com/Smile4ever/Translate-Now",
+	"manifest_version": 3,
+	"version": "5.0.0",
+	"background": {
+		"scripts": ["background.js", "utils/google-translate.js"]
+	},
+	"icons": {
+		"64": "icons/translatenow-64.png"
+	},
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": ["translatenow.js", "utils/google-translate.js"],
+			"run_at": "document_start"
+		}
+	],
+	"permissions": ["storage", "tabs", "contextMenus", "notifications"],
+	"host_permissions": [
+		"<all_urls>"
+	],
+	"options_ui": {
+		"page": "options.html"
+	},
+	"action": {
+		"default_icon": "icons/translatenow-64.png"
+	},
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "@translatenow",
+			"strict_min_version": "109.0"
+		},
+		"gecko_android": {
+			"id": "@translatenow",
+			"strict_min_version": "121.0"
+		}
+	}
+}
