@@ -12,6 +12,7 @@ let firefoxAndroid = false;
 //the addons icon is a modified version of http://www.flaticon.com/free-icon/translator-tool_69101
 //see their website for licensing information
 
+let initDone = false;
 let translate_now_destination_language;
 let translate_now_source_language;
 let translate_now_reuse_tab;
@@ -88,6 +89,7 @@ async function init(){
 	}
 
 	browser.action.setTitle({title: "Translate Now - " + format(translate_now_translate_engine)});
+	initDone = true;
 }
 init();
 
@@ -146,7 +148,6 @@ async function initPlatform(){
 async function initContextMenus(){
 	if(browser.contextMenus == undefined) return;
 
-	browser.contextMenus.onClicked.removeListener(listener);
 	browser.contextMenus.removeAll();
 
 	let selectionPageContext = [];
@@ -170,8 +171,6 @@ async function initContextMenus(){
 	//	createContextMenu("translatenow-deepl-speak", "Speak with Deepl Translator Voice", selectionContext, "icons/engines/deepl.png");
 	//if(translate_now_show_google_translate_voice)
 	//	createContextMenu("translatenow-google-speak", "Speak with Google Translate Voice", selectionContext, "icons/engines/google.png");
-	
-	browser.contextMenus.onClicked.addListener(listener);
 }
 
 function createContextMenu(id, title, contexts, icon64){
@@ -193,7 +192,9 @@ function createContextMenu(id, title, contexts, icon64){
 	}
 }
 
-function listener(info,tab){
+async function listener(info,tab){
+	if(initDone == false) await init();
+	
 	if(info.menuItemId == "translatenow-tb-preferences"){
 		browser.runtime.openOptionsPage();
 		return;
@@ -216,7 +217,12 @@ function listener(info,tab){
 	doClick(selectionText, pageUrl, info.menuItemId.replace("translatenow-", ""));
 }
 
-function clickToolbarButton(){
+browser.contextMenus.onClicked.removeListener(listener);
+browser.contextMenus.onClicked.addListener(listener);
+
+async function clickToolbarButton(){
+	if(initDone == false) await init();
+
 	if(translate_now_translate_engine != null){
 		globalAction = translate_now_translate_engine + "-translate";
 
@@ -292,7 +298,7 @@ function doClick(selectionText, pageUrl, action){
 	// Ideally, we want to use selectionText this which also works for cross-domain iframes (nice!!)
 	// But we now use a content script if the selection is too long to circumvent https://bugzilla.mozilla.org/show_bug.cgi?id=1338898
 
-	if(selectionText.length < 150 || pageUrl != "" || (selectionText.length > 150 && selectionText.length != 16384))
+	if(pageUrl != "" || (selectionText.length > 0 && selectionText.length != 16384))
 		doAction(selectionText, pageUrl, action);
 	else
 		sendMessage("getSelection", selectionText, priviledgedSiteNoContentScript);

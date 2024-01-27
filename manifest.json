@@ -3,7 +3,7 @@
 	"description": "Right click a selection, page or link to translate words.",
 	"homepage_url": "https://github.com/Smile4ever/Translate-Now",
 	"manifest_version": 3,
-	"version": "5.0.0",
+	"version": "5.0.1",
 	"background": {
 		"scripts": ["background.js", "utils/google-translate.js"]
 	},

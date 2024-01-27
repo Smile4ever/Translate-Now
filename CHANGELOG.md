@@ -1,3 +1,7 @@
+5.0.1 (2024-01-27)
+==================
+* Fix event listener bugs introduced with the migration to Manifest V3
+
 5.0.0 (2023-12-22)
 ==================
 Features
