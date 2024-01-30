@@ -12,4 +12,3 @@ Speak engines
 Other items
 =============
 * Check if all supported languages are supported by Bing (probably not)
-* Check if all supported languages are supported by DeepL (probably not)

@@ -1,3 +1,8 @@
+5.0.3 (2024-01-30)
+==================
+* DeepL Translator: add more languages to the dropdown in the options: Arabic, Bulgarian, Chinese, Czech, Danish, Estonian, Finnish, Greek, Hungarian, Indonesian, Japanese, Korean, Latvian, Norwegian, Portuguese, Romanian, Russian, Slovak, Slovenian, Swedish, Turkish and Ukrainian
+* Set default destination language to detect automatically ("auto"). The property navigator.language is used if there is no destination language set yet and if it's not empty. Otherwise fallback to the previous default English ("en")
+
 5.0.2 (2024-01-30)
 ==================
 * Add documentUrlPatterns (http and https) so that context menu items don't show on internal pages

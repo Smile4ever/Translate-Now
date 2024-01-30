@@ -58,7 +58,15 @@ async function init(){
 		"translate_now_show_deepl_translator_voice"
 	]);
 	
-	translate_now_destination_language = valueOrDefault(result.translate_now_destination_language, "en");
+	translate_now_destination_language = valueOrDefault(result.translate_now_destination_language, "auto");
+	if(translate_now_destination_language == "auto"){
+		if(navigator.language != "" && navigator.language != null){
+			translate_now_destination_language = navigator.language;
+		}else{
+			translate_now_destination_language = "en";
+		}
+	}
+	
 	translate_now_source_language = valueOrDefault(result.translate_now_source_language, "auto");
 	translate_now_reuse_tab = valueOrDefault(result.translate_now_reuse_tab, true);
 	translate_now_reuse_tab_all = valueOrDefault(result.translate_now_reuse_tab_all, false);

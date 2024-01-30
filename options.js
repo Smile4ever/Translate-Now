@@ -1,7 +1,7 @@
 const PREFS = {
 	"translate_now_destination_language": {
 		"type": "value",
-		"default": "en"
+		"default": "auto"
 	},
 	"translate_now_source_language": {
 		"type": "value",
