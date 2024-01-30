@@ -181,13 +181,15 @@ function createContextMenu(id, title, contexts, icon64){
 			contexts: contexts,
 			icons: {
 				"64": browser.runtime.getURL(icon64)
-			}
+			},
+			documentUrlPatterns: ["http://*/*", "https://*/*"]
 		});
 	}else{
 		browser.contextMenus.create({
 			id: id,
 			title: title,
-			contexts: contexts
+			contexts: contexts,
+			documentUrlPatterns: ["http://*/*", "https://*/*"]
 		});
 	}
 }

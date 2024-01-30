@@ -1,3 +1,7 @@
+5.0.2 (2024-01-30)
+==================
+* Add documentUrlPatterns (http and https) so that context menu items don't show on internal pages
+
 5.0.1 (2024-01-27)
 ==================
 * Fix event listener bugs introduced with the migration to Manifest V3
