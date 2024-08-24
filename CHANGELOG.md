@@ -1,3 +1,9 @@
+5.0.4 (2024-08-24)
+==================
+* Google Translate: fix URL (Google changed the structure)
+* DeepL Translator: fix language display bug when source language is set to "auto"
+* Notify user when content script does not have permissions
+
 5.0.3 (2024-01-30)
 ==================
 * DeepL Translator: add more languages to the dropdown in the options: Arabic, Bulgarian, Chinese, Czech, Danish, Estonian, Finnish, Greek, Hungarian, Indonesian, Japanese, Korean, Latvian, Norwegian, Portuguese, Romanian, Russian, Slovak, Slovenian, Swedish, Turkish and Ukrainian

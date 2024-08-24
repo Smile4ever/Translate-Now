@@ -131,6 +131,7 @@ async function sendMessage(action, data, errorCallback){
 	for (tab of tabs) {
 		browser.tabs.sendMessage(tab.id, {"action": action, "data": data}).catch(function(){
 			console.error("Sendmessage failed, check the content script for syntax errors or check the addon permissions in Firefox. Action: " + action + " to " + tab.url + " with data " + JSON.stringify(data));
+			notify("Sending message " + action + " failed, check the addon permissions in Firefox");
 			if(errorCallback) errorCallback(data, tab.url);
 		});
 	}
@@ -202,7 +203,7 @@ function createContextMenu(id, title, contexts, icon64){
 	}
 }
 
-async function listener(info,tab){
+async function listener(info, tab){
 	if(initDone == false) await init();
 	
 	if(info.menuItemId == "translatenow-tb-preferences"){
@@ -295,12 +296,10 @@ async function openFocusedTab(url){
 	lastTabs.push({id: tab.id, url: url});
 }
 
-function handleRemoved(tabId, removeInfo) {
+browser.tabs.onRemoved.addListener((tabId, removeInfo) => {
 	// Remove closed tabs from the lastTabs array
 	lastTabs = lastTabs.filter(lastTab => lastTab.id != tabId);
-}
-
-browser.tabs.onRemoved.addListener(handleRemoved);
+});
 
 function doClick(selectionText, pageUrl, action){
 	globalAction = action;
@@ -315,10 +314,8 @@ function doClick(selectionText, pageUrl, action){
 }
 
 function priviledgedSiteNoContentScript(selectionText, pageUrl){
-	// We are probably on addons.mozilla.org or another priviledged website
-	//notify("This website is not supported due to security restrictions.");
-	
-	// Support for addons.mozilla.org among other websites (best effort)
+	// We are probably on addons.mozilla.org or another priviledged website	
+	// Best effort support for addons.mozilla.org among other websites
 	doAction(selectionText, pageUrl, globalAction);
 }
 
@@ -327,7 +324,7 @@ function isTranslationPage(pageUrl){
 }
 
 function isInvalidPage(pageUrl){
-	return pageUrl.includes("about:") || pageUrl.includes("moz-extension://") || pageUrl.includes("chrome:") || pageUrl.includes("chrome-extension://");
+	return pageUrl.startsWith("https:") == false && pageUrl.startsWith("http://") == false;
 }
 
 function doAction(selectionText, pageUrl, action){
@@ -392,7 +389,7 @@ function doAction(selectionText, pageUrl, action){
 			// Using HTTP instead of HTTPS, to trigger Firefox HTTP -> HTTPS redirect. Otherwise, the old text is retained. See bug 18. https://github.com/Smile4ever/firefoxaddons/issues/18
 			//openTab("http://translate.google.com/#" + translate_now_source_language + "/" + translate_now_destination_language + "/" + newText);
 			// Use new URL structure, see bug 156. https://github.com/Smile4ever/firefoxaddons/issues/156
-			openTab("http://translate.google.com/#view=home&op=translate&sl=" + translate_now_source_language + "&tl=" + translate_now_destination_language + "&text=" + newText);
+			openTab("http://translate.google.com/?sl=" + translate_now_source_language + "&tl=" + translate_now_destination_language + "&text=" + newText + "&op=translate");
 			
 			browser.tabs.onUpdated.addListener(pageLoaded);
 			setTimeout(function(){
@@ -410,7 +407,7 @@ function doAction(selectionText, pageUrl, action){
 			// Using HTTP instead of HTTPS, to trigger Firefox HTTP -> HTTPS redirect. Otherwise, the old text is retained. See bug 18. https://github.com/Smile4ever/firefoxaddons/issues/18
 			//openTab("http://translate.google.com/#" + translate_now_source_language + "/" + translate_now_destination_language + "/" + newText);
 			// Use new URL structure, see bug 156. https://github.com/Smile4ever/firefoxaddons/issues/156
-			openTab("http://translate.google.com/#view=home&op=translate&sl=" + translate_now_source_language + "&tl=" + translate_now_destination_language + "&text=" + newText);
+			openTab("http://translate.google.com/?sl=" + translate_now_source_language + "&tl=" + translate_now_destination_language + "&text=" + newText + "&op=translate");
 		}
 	}
 	
@@ -424,8 +421,8 @@ function doAction(selectionText, pageUrl, action){
 	}
 
 	if(action.includes("deepl")){
-		let sourceLanguage = translate_now_source_language == "auto" ? "en" : translate_now_source_language;
-		openTab("https://www.deepl.com/translator#" + sourceLanguage + "/" + translate_now_destination_language + "/" + newText);
+		//let sourceLanguage = translate_now_source_language == "auto" ? "en" : translate_now_source_language;
+		openTab("https://www.deepl.com/translator#" + translate_now_source_language + "/" + translate_now_destination_language + "/" + newText);
 
 		if(action == "deepl-speak"){
 			sendMessage("deeplSpeak", {

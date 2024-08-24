@@ -118,10 +118,10 @@ function getInputSelection(doc){
 }
 
 function bingTranslate(translate_now_source_language, translate_now_destination_language, selectedText){
-	sendMessage("log, bing src language " + translate_now_source_language);
+	sendMessage("log", "bing src language " + translate_now_source_language);
 	setBingLanguage("tta_srcsl", translate_now_source_language.replace("auto", "auto-detect"));
 	
-	sendMessage("log, bing dest language " + translate_now_destination_language);
+	sendMessage("log", "bing dest language " + translate_now_destination_language);
 	setBingLanguage("tta_tgtsl", translate_now_destination_language);
 	
 	let realDocument = document;
